@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой дашборд</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 30px; }
+        .date { color: #666; font-size: 18px; margin-bottom: 20px; }
+        .news-grid { display: grid; gap: 20px; margin-bottom: 40px; }
+        .news-item { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .news-item.high { border-left: 5px solid #ff4444; }
+        .news-item.medium { border-left: 5px solid #ffaa00; }
+        .theme { font-weight: bold; color: #0066cc; margin-bottom: 5px; }
+        .source { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .summary { color: #333; line-height: 1.6; margin-bottom: 10px; }
+        .link { color: #0066cc; text-decoration: none; }
+        .link:hover { text-decoration: underline; }
+        .tasks { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+        .task-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .task-card h2 { color: #333; margin-bottom: 15px; }
+        .stats { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .stats h2 { color: #333; margin-bottom: 15px; }
+        @media (max-width: 768px) {
+            .tasks { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📰 Утренний дайджест</h1>
+        <div class="date">{{ today }}</div>
+
+        <div class="news-grid">
+            {% for item in news %}
+            <div class="news-item {{ item.importance }}">
+                <div class="theme">{{ item.theme }}</div>
+                <div class="source">{{ item.source }}</div>
+                <div class="summary">{{ item.summary }}</div>
+                <a href="{{ item.url }}" class="link">Читать оригинал →</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="tasks">
+            <div class="task-card">
+                <h2>🐍 Python</h2>
+                <ul>
+                    <li>Напиши функцию фильтрации новостей по теме</li>
+                    <li>Добавь параметр "минимальная важность"</li>
+                </ul>
+            </div>
+            <div class="task-card">
+                <h2>🇨🇳 Китайский</h2>
+                <ul>
+                    <li>Иероглифы: 无人机 (дрон), 打印 (печать)</li>
+                    <li>Переведи заголовок первой новости</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="stats">
+            <h2>📊 Статистика февраля 2026</h2>
+            <ul>
+                <li>🔥 Дроны — 14 упоминаний</li>
+                <li>🔥 Недвижимость Москвы — 9 упоминаний</li>
+                <li>⏸️ 3D-печать — 5 упоминаний</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
