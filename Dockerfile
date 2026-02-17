@@ -2,14 +2,15 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем всё (так проще и надёжнее)
-COPY . .
+# Копируем всё, игнорируя .gitignore
+COPY --chown=root:root . .
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Проверяем, что файлы на месте
-RUN ls -la /app && echo "✅ Файлы скопированы"
+# Подробная проверка
+RUN echo "=== ВСЕ ФАЙЛЫ ===" && ls -la /app && \
+    echo "=== ПОИСК APP.PY ===" && find /app -name "app.py" || echo "❌ app.py НЕ НАЙДЕН"
 
 EXPOSE 80
 
