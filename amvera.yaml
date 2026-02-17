@@ -1,0 +1,13 @@
+meta:
+  name: digest
+  toolchain: python3
+  version: "3.11"
+
+build:
+  requirementsPath: requirements.txt
+
+run:
+  command: python app.py
+  workdir: my-news-dashboard
+  persistenceMount: /data
+  containerPort: 80
