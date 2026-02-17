@@ -2,14 +2,18 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем всё сразу (так проще и надёжнее)
+# Копируем только requirements.txt сначала (для кэширования)
+COPY requirements.txt .
+
+# Устанавливаем зависимости с подробным выводом
+RUN pip install --no-cache-dir -v -r requirements.txt
+
+# Копируем остальные файлы
 COPY . .
 
-# Устанавливаем зависимости
-RUN pip install --no-cache-dir -r requirements.txt
+# Проверяем, что gunicorn установился
+RUN which gunicorn && echo "✅ Gunicorn installed" || echo "❌ Gunicorn NOT found"
 
-# Указываем порт
 EXPOSE 80
 
-# Запускаем приложение
 CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
