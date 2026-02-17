@@ -1,6 +1,7 @@
 meta:
-  version: '3.11'
   name: digest
+  toolchain: python  # ← обязательно нужно добавить
+  version: '3.11'
 
 build:
   requirementsPath: requirements.txt
