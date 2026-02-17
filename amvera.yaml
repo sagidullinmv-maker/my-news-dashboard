@@ -1,16 +1,13 @@
 meta:
   name: digest
-  toolchain: python  # ← обязательно нужно добавить
+  toolchain: python3
   version: '3.11'
 
 build:
   requirementsPath: requirements.txt
-  useCache: false
 
 run:
-  scriptName: app.py
   command: python app.py
   workdir: my-news-dashboard
   persistenceMount: /data
   containerPort: 80
-  env: []
