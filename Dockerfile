@@ -5,20 +5,14 @@ WORKDIR /app
 # Копируем всё
 COPY . .
 
-# Устанавливаем зависимости
+# Только устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Добавляем текущую директорию в PYTHONPATH
-ENV PYTHONPATH=/app
-
-# ПОДРОБНАЯ ПРОВЕРКА
+# Просто смотрим, что в папке
 RUN ls -la /app && \
-    echo "=== СОДЕРЖИМОЕ ПАПКИ /app ===" && \
-    find /app -name "*.py" -type f | head -20 && \
-    echo "=== ПРОВЕРКА ИМПОРТА ===" && \
-    python -c "import sys; print('Python path:', sys.path); import app; print('✅ app.py импортирован успешно')" || \
-    (echo "❌ ОШИБКА: app.py не найден или не импортируется" && exit 1)
+    echo "=== Поиск app.py ===" && \
+    find /app -name "app.py" || echo "app.py не найден"
 
 EXPOSE 80
 
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "--chdir", "/app", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
