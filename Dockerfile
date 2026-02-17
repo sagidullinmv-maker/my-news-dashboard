@@ -2,16 +2,16 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем всё
-COPY . .
+# Явно копируем основные файлы
+COPY app.py .
+COPY requirements.txt .
+COPY templates/ ./templates/
 
-# Только устанавливаем зависимости
+# Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Просто смотрим, что в папке
-RUN ls -la /app && \
-    echo "=== Поиск app.py ===" && \
-    find /app -name "app.py" || echo "app.py не найден"
+# Проверяем, что файлы на месте
+RUN ls -la /app && ls -la /app/templates/
 
 EXPOSE 80
 
