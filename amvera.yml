@@ -1,0 +1,15 @@
+meta:
+  version: '3.11'
+  name: digest
+
+build:
+  requirementsPath: requirements.txt
+  useCache: false
+
+run:
+  scriptName: app.py
+  command: python app.py
+  workdir: my-news-dashboard
+  persistenceMount: /data
+  containerPort: 80
+  env: []
