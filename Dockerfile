@@ -2,17 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем только requirements.txt сначала (для кэширования)
-COPY requirements.txt .
-
-# Устанавливаем зависимости с подробным выводом
-RUN pip install --no-cache-dir -v -r requirements.txt
-
-# Копируем остальные файлы
+# Копируем все файлы
 COPY . .
 
-# Проверяем, что gunicorn установился
-RUN which gunicorn && echo "✅ Gunicorn installed" || echo "❌ Gunicorn NOT found"
+# Устанавливаем зависимости
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Проверяем установку
+RUN pip list | grep gunicorn
 
 EXPOSE 80
 
