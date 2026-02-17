@@ -2,15 +2,19 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Копируем все файлы
+# Копируем всё
 COPY . .
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Проверяем установку
-RUN pip list | grep gunicorn
+# Добавляем текущую директорию в PYTHONPATH
+ENV PYTHONPATH=/app
+
+# Проверяем, что app.py виден
+RUN python -c "import sys; print('Python path:', sys.path); import app; print('✅ app.py импортирован успешно')"
 
 EXPOSE 80
 
-CMD ["gunicorn", "--bind", "0.0.0.0:80", "app:app"]
+# Запускаем с явным указанием директории
+CMD ["gunicorn", "--bind", "0.0.0.0:80", "--chdir", "/app", "app:app"]
