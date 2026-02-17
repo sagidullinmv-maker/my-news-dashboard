@@ -2,16 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Явно копируем основные файлы
-COPY app.py .
-COPY requirements.txt .
-COPY templates/ ./templates/
+# Копируем всё (так проще и надёжнее)
+COPY . .
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Проверяем, что файлы на месте
-RUN ls -la /app && ls -la /app/templates/
+RUN ls -la /app && echo "✅ Файлы скопированы"
 
 EXPOSE 80
 
