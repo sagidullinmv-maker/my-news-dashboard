@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой дашборд</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #212529; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e9ecef; }
+        .logo { font-weight: bold; font-size: 1.5rem; color: #343a40; }
+        .date { color: #6c757d; font-size: 0.9rem; }
+        
+        /* Навигация по темам */
+        .tabs {
+            display: flex; overflow-x: auto; gap: 10px; margin: 20px 0; padding-bottom: 10px; border-bottom: 1px solid #e9ecef;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+        }
+        .tab {
+            padding: 8px 15px;
+            border-radius: 20px;
+            background: #e9ecef;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .tab:hover {
+            background: #dee2e6;
+        }
+        .tab.active {
+            background: #0d6efd;
+            color: white;
+            font-weight: 500;
+        }
+        
+        /* Новости */
+        .news-grid { 
+            display: grid; 
+            gap: 15px; 
+            margin-bottom: 30px;
+        }
+        .news-item {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e9ecef;
+        }
+        .news-item:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #0d6efd;
+        }
+        .news-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            color: white;
+        }
+        .news-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .news-title {
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #212529;
+        }
+        .news-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .source-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .source-name {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+        .language-badge {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: #e9ecef;
+        }
+        .language-badge.zh { background: #ffebee; color: #c62828; }
+        .language-badge.en { background: #e3f2fd; color: #0d47a1; }
+        .language-badge.ru { background: #e8f5e8; color: #2e7d32; }
+        
+        .source-link {
+            color: #0d6efd;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #f8f9fa;
+            transition: background 0.2s;
+        }
+        .source-link:hover {
+            background: #e9ecef;
+            text-decoration: underline;
+        }
+        .source-link i {
+            font-size: 0.8rem;
+        }
+        .importance-badge {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        /* Задания и статистика */
+        .section { margin: 40px 0; }
+        .section-title { 
+            font-size: 1.3rem; 
+            margin-bottom: 20px; 
+            color: #343a40;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tasks-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .task-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        .task-card h3 {
+            margin-bottom: 12px;
+            color: #212529;
+        }
+        .task-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .task-card li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .task-card li:last-child {
+            border-bottom: none;
+        }
+        .task-card li:before {
+            content: "•";
+            color: #0d6efd;
+            font-weight: bold;
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; 
+        }
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+            text-align: center;
+        }
+        .stat-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #6c757d;
+        }
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs { gap: 8px; }
+            .tab { padding: 6px 12px; font-size: 0.8rem; }
+            .news-item { padding: 12px; }
+            .news-meta { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .source-link { align-self: flex-end; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">📰 Мой дайджест</div>
+            <div class="date">{{ today }}</div>
+        </div>
+
+        <!-- Навигация по темам -->
+        <div class="tabs" id="tabs-container">
+            <div class="tab active" data-theme="all">🏠 Главное</div>
+            <div class="tab" data-theme="Дроны">🚁 Дроны</div>
+            <div class="tab" data-theme="3D-печать">🖨️ 3D-печать</div>
+            <!-- НОВЫЕ ТЕМЫ: Металлические 3D-принтеры -->
+            <div class="tab" data-theme="Metal-Base (The Metal 1.0)">⚙️ Metal 1.0</div>
+            <div class="tab" data-theme="MetalPrinting (Gauss MT90)">🛠️ Gauss MT90</div>
+            <!-- Остальные темы -->
+            <div class="tab" data-theme="Недвижимость Москвы">🏘️ Недвижимость</div>
+            <div class="tab" data-theme="Акции/облигации РФ">📈 Финансы</div>
+            <div class="tab" data-theme="ИИ в строительстве">🤖 ИИ</div>
+            <div class="tab" data-theme="Китайские источники">🇨🇳 Китай</div>
+        </div>
+
+        <!-- Новости -->
+        <div class="news-grid" id="news-container">
+            {% for item in news %}
+            <div class="news-item" data-theme="{{ item.theme }}">
+                <div class="news-icon" style="background: {{ 'linear-gradient(135deg, #dc3545, #c82333)' if item.importance == 'high' else 'linear-gradient(135deg, #6c757d, #495057)' }}">
+                    <i class="fas {{ 'fa-bolt' if item.importance == 'high' else 'fa-newspaper' }}"></i>
+                </div>
+                <div class="news-content">
+                    <div class="news-title">{{ item.summary }}</div>
+                    <div class="news-meta">
+                        <div class="source-info">
+                            <span class="importance-badge" style="background: {{ '#dc3545' if item.importance == 'high' else '#6c757d' }}"></span>
+                            <span class="source-name">
+                                <i class="fas fa-circle" style="font-size: 0.4rem; color: {{ '#dc3545' if item.importance == 'high' else '#adb5bd' }}"></i>
+                                {{ item.source }}
+                            </span>
+                            {% if item.lang and item.lang != 'ru' %}
+                            <span class="language-badge {{ item.lang }}">{{ item.lang|upper }}</span>
+                            {% endif %}
+                        </div>
+                        <a href="{{ item.url }}" class="source-link" target="_blank" rel="noopener noreferrer">
+                            <span>Читать</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Задания -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-tasks" style="color: #0d6efd;"></i>
+                Задания на день
+            </h2>
+            <div class="tasks-grid">
+                <div class="task-card">
+                    <h3>🐍 Python</h3>
+                    <ul>
+                        <li>Напиши функцию фильтрации новостей по теме</li>
+                        <li>Добавь параметр "минимальная важность"</li>
+                        <li>Попробуй использовать list comprehension</li>
+                    </ul>
+                </div>
+                <div class="task-card">
+                    <h3>🇨🇳 Китайский</h3>
+                    <ul>
+                        <li>Иероглифы: 无人机 (дрон), 打印 (печать)</li>
+                        <li>Переведи заголовок первой новости</li>
+                        <li>Напиши 5 предложений про строительство</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Статистика -->
+        <div class="section">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line" style="color: #0d6efd;"></i>
+                Статистика февраля 2026
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>🔥 Дроны</h3>
+                    <p>14</p>
+                    <small>упоминаний</small>
+                </div>
+                <div class="stat-card">
+                    <h3>🔥 Недвижимость</h3>
+                    <p>9</p>
+                    <small>упоминаний</small>
+                </div>
+                <div class="stat-card">
+                    <h3>⏸️ 3D-печать</h3>
+                    <p>5</p>
+                    <small>упоминаний</small>
+                </div>
+                <div class="stat-card">
+                    <h3>⚙️ Metal 1.0</h3>
+                    <p>2</p>
+                    <small>упоминания</small>
+                </div>
+                <div class="stat-card">
+                    <h3>🛠️ Gauss MT90</h3>
+                    <p>1</p>
+                    <small>упоминание</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Фильтрация новостей по темам
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const newsItems = document.querySelectorAll('.news-item');
+            
+            // Функция фильтрации
+            function filterNews(theme) {
+                newsItems.forEach(item => {
+                    if (theme === 'all' || item.dataset.theme === theme) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Обработчик клика по вкладкам
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Убираем активный класс у всех вкладок
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Добавляем активный класс текущей вкладке
+                    this.classList.add('active');
+                    
+                    // Фильтруем новости
+                    const theme = this.dataset.theme;
+                    filterNews(theme);
+                });
+            });
+            
+            // Показываем все новости при загрузке
+            filterNews('all');
+        });
+    </script>
+</body>
+</html>
